@@ -12,6 +12,12 @@ This repository is currently built automatically by two systems. Travis builds t
 - [![ROS Kinetic Build Farm Status](http://build.ros.org/buildStatus/icon?job=Kdoc__moveit_tutorials__ubuntu_xenial_amd64)](http://build.ros.org/job/Kdoc__moveit_tutorials__ubuntu_xenial_amd64/) [ROS Kinetic Build Farm](http://docs.ros.org/kinetic/api/moveit_tutorials/html/)
 - [![ROS Indigo Build Status](http://build.ros.org/buildStatus/icon?job=Idoc__moveit_tutorials__ubuntu_trusty_amd64)](http://build.ros.org/job/Idoc__moveit_tutorials__ubuntu_trusty_amd64/) [ROS Indigo Build Farm](http://docs.ros.org/indigo/api/moveit_tutorials/html/)
 
+## Files to Check
+- GUI File
+    Location - 
+- Publisher
+    Location - 
+
 ## Versions
 
 - ``indigo-devel`` usage is discouraged
