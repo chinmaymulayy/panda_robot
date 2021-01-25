@@ -183,11 +183,6 @@ class MoveGroupPythonIntefaceTutorial(object):
         # Note: there is no equivalent function for clear_joint_value_targets()
         group.clear_pose_targets()
 
-        ## END_SUB_TUTORIAL
-
-        # For testing:
-        # Note that since this section of code will not be included in the tutorials
-        # we use the class variable rather than the copied state variable
         current_pose = self.group.get_current_pose().pose
         x = pose_goal
         return all_close(pose_goal, current_pose, 0.01), x
@@ -196,14 +191,10 @@ class MoveGroupPythonIntefaceTutorial(object):
     def plan_cartesian_path(self, scale=1):
 
         group = self.group
-
-        ## BEGIN_SUB_TUTORIAL plan_cartesian_path
-        ##
         ## Cartesian Paths
         ## ^^^^^^^^^^^^^^^
         ## You can plan a Cartesian path directly by specifying a list of waypoints
         ## for the end-effector to go through:
-        ##
         waypoints = []
 
         wpose = group.get_current_pose().pose
@@ -211,13 +202,6 @@ class MoveGroupPythonIntefaceTutorial(object):
         wpose.position.y += 0 
         wpose.position.z += 0  
         waypoints.append(copy.deepcopy(wpose))
-
-        # wpose.position.x += scale * 0.1  # Second move forward/backwards in (x)
-        # waypoints.append(copy.deepcopy(wpose))
-
-        # wpose.position.y -= scale * 0.1  # Third move sideways (y)
-        # waypoints.append(copy.deepcopy(wpose))
-
         # We want the Cartesian path to be interpolated at a resolution of 1 cm
         # which is why we will specify 0.01 as the eef_step in Cartesian
         # translation.  We will disable the jump threshold by setting it to 0.0 disabling:
@@ -226,10 +210,7 @@ class MoveGroupPythonIntefaceTutorial(object):
                                         0.01,        # eef_step
                                         0.0)         # jump_threshold
 
-        # Note: We are just planning, not asking move_group to actually move the robot yet:
         return plan, fraction
-
-        ## END_SUB_TUTORIAL
 
     def display_trajectory(self, plan):
     
@@ -244,8 +225,6 @@ class MoveGroupPythonIntefaceTutorial(object):
         # Publish
         display_trajectory_publisher.publish(display_trajectory);
 
-        ## END_SUB_TUTORIAL
-
     def execute_plan(self, plan):
 
         group = self.group
@@ -257,17 +236,11 @@ class MoveGroupPythonIntefaceTutorial(object):
         ## the plan that has already been computed:
         group.execute(plan, wait=True)
 
-        ## **Note:** The robot's current joint state must be within some tolerance of the
-        ## first waypoint in the `RobotTrajectory`_ or ``execute()`` will fail
-     
-
     def wait_for_state_update(self, box_is_known=False, box_is_attached=False, timeout=4):
 
         box_name = self.box_name
         scene = self.scene
 
-        ## BEGIN_SUB_TUTORIAL wait_for_scene_update
-        ##
         ## Ensuring Collision Updates Are Receieved
         ## ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         ## If the Python node dies before publishing a collision object update message, the message
@@ -298,9 +271,7 @@ class MoveGroupPythonIntefaceTutorial(object):
 
         # If we exited the while loop without returning then we timed out
         return False
-        ## END_SUB_TUTORIAL
-
-    
+      
     def home_position(self):
 
         group = self.group
@@ -324,8 +295,6 @@ class MoveGroupPythonIntefaceTutorial(object):
         # Calling ``stop()`` ensures that there is no residual movement
         group.stop()
 
-        ## END_SUB_TUTORIAL
-
         current_joints = self.group.get_current_joint_values()
         return all_close(joint_goal, current_joints, 0.01)
 
@@ -333,10 +302,6 @@ class MoveGroupPythonIntefaceTutorial(object):
         global J1, J2, J3, J4, J5, J6, J7
 
         group = self.group
-
-        ## BEGIN_SUB_TUTORIAL plan_to_joint_state
-        ##
-
         joint_goal = group.get_current_joint_values()
         joint_goal[0] = float(J1)
         joint_goal[1] = float(J2)
@@ -357,17 +322,12 @@ class MoveGroupPythonIntefaceTutorial(object):
         current_joints = self.group.get_current_joint_values()
         return all_close(joint_goal, current_joints, 0.01)
 
-
-
     def add_box(self, timeout=4):
         global box_x_initial, box_y_initial, box_z_initial
 
         box_name = self.box_name
         scene = self.scene
-      
-
-        ## BEGIN_SUB_TUTORIAL add_box
-        ##
+ 
         ## Adding Objects to the Planning Scene
         ## ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         ## First, we will create a box in the planning scene at the location of the left finger:
@@ -385,7 +345,6 @@ class MoveGroupPythonIntefaceTutorial(object):
         self.box_name=box_name
         return self.wait_for_state_update(box_is_known=True, timeout=timeout), box_pose
 
-
     def attach_box(self, timeout=4):
 
         box_name = self.box_name
@@ -393,9 +352,6 @@ class MoveGroupPythonIntefaceTutorial(object):
         scene = self.scene
         eef_link = self.eef_link
         group_names = self.group_names
-
-        ## BEGIN_SUB_TUTORIAL attach_object
-        ##
         ## Attaching Objects to the Robot
         ## ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         grasping_group = 'hand'
@@ -485,7 +441,6 @@ class gripper_control(object):
         print "============ Printing robot state"
         print robot.get_current_state()
         print ""
-        ## END_SUB_TUTORIAL
 
         # Misc variables
         self.box_name = ''
@@ -497,8 +452,6 @@ class gripper_control(object):
         self.eef_link = eef_link
         self.group_names = group_names
 
-
-
     def gripper_open(self):
 
         group = self.group
@@ -509,15 +462,12 @@ class gripper_control(object):
         joint_goal[0] = 0.035
         joint_goal[1] = 0.035
 
-
         # The go command can be called with joint values, poses, or without any
         # parameters if you have already set the pose or joint target for the group
         group.go(joint_goal, wait=True)
 
         # Calling ``stop()`` ensures that there is no residual movement
         group.stop()
-
-        ## END_SUB_TUTORIAL
 
         current_joints = self.group.get_current_joint_values()
         return all_close(joint_goal, current_joints, 0.01)
@@ -526,8 +476,6 @@ class gripper_control(object):
 
         group = self.group
 
-        ## BEGIN_SUB_TUTORIAL plan_to_joint_state
-        ##
         ## Planning to a Joint Goal
         ## ^^^^^^^^^^^^^^^^^^^^^^^^
         ## The Panda's zero configuration is at a `singularity <https://www.quora.com/Robotics-What-is-meant-by-kinematic-singularity>`_ so the first
@@ -545,34 +493,13 @@ class gripper_control(object):
         # Calling ``stop()`` ensures that there is no residual movement
         group.stop()
 
-        ## END_SUB_TUTORIAL
-
-        # For testing:
-        # Note that since this section of code will not be included in the tutorials
-        # we use the class variable rather than the copied state variable
         current_joints = self.group.get_current_joint_values()
         return all_close(joint_goal, current_joints, 0.01)
-
-
-
-
-
-
-
-
-
 
 
 # Creating objects of class
 tutorial = MoveGroupPythonIntefaceTutorial()
 gripper = gripper_control()
-
-
-
-
-
-
-
 
 
 window = tk.Tk()
@@ -597,10 +524,14 @@ img_robot = tk.PhotoImage(file='robot2.png')
 def insert_box():
     tutorial.add_box()
 
+# Motion Pipeline
 def play():
    
     start_time = rospy.get_time()
-    tutorial.user_home_position
+    try:
+        tutorial.user_home_position()
+    except:
+        pass
     tutorial.pick_up_box()
     gripper.gripper_open()
     cartesian_plan, fraction = tutorial.plan_cartesian_path()
@@ -610,7 +541,10 @@ def play():
     tutorial.place_box()
     gripper.gripper_open()
     tutorial.detach_box()
-    tutorial.home_position
+    try:
+        tutorial.user_home_position()
+    except:
+        tutorial.home_position()
     end_time = rospy.get_time()
     total_time = end_time - start_time
     total_time_rounded = round(total_time, 3)
@@ -701,7 +635,7 @@ label_jointlimits = tk.Label(text="Joint limits(rad)",
 label_jointlimits.place(x=625, y=225)
 
 
-label_limits_J1357 = tk.Label(text="J1,J3,J5,J7 :  [-2.8 , 2.8]\n                   J2 :  [-1.75 , 1.75] \n             J4 :  [-3.05 , 0]\n             J6 :  [0 . 3.74] ",
+label_limits_J1357 = tk.Label(text="J1,J3,J5,J7 :  [-2.8 , 2.8]\n                   J2 :  [-1.75 , 1.75] \n             J4 :  [-3.05 , -0.98]\n             J6 :  [0.01 , 3.74] ",
                     bg="black", fg=grey,
                     font=(fontstyle, 11))
 label_limits_J1357.place(x=580, y=280)
